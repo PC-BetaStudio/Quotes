@@ -1,0 +1,206 @@
+<!-- Price List & Quote Builder. Paste this whole block into your website (HTML/custom-code block) or host it and load it in an iframe. -->
+<div id="cds-app">
+<style>
+#cds-app{--ink:#1c2530;--mute:#5b6673;--line:#d9dee3;--soft:#f3f5f7;--acc:#1d5c63;--accd:#14444a;--warnbg:#fff4d6;--warnbd:#d9a400;max-width:880px;margin:0 auto;padding:12px;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-sizing:border-box}
+#cds-app *{box-sizing:border-box}
+#cds-app h2{font-size:1.5rem;margin:0 0 4px}
+#cds-app h3{font-size:1.05rem;margin:22px 0 6px}
+#cds-app .cds-warn{background:var(--warnbg);border:1px solid var(--warnbd);border-left-width:5px;border-radius:6px;padding:10px 14px;margin:12px 0;font-size:.95rem}
+#cds-app .cds-warn a{color:var(--accd);font-weight:600}
+#cds-app .cds-tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin:16px 0}
+#cds-app .cds-tab{border:0;background:none;padding:10px 18px;font:inherit;font-weight:600;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+#cds-app .cds-tab[aria-selected=true]{color:var(--acc);border-color:var(--acc)}
+#cds-app button:focus-visible,#cds-app input:focus-visible,#cds-app select:focus-visible{outline:3px solid #7fb7bd;outline-offset:1px}
+#cds-app [hidden]{display:none!important}
+#cds-app input[type=search],#cds-app input[type=text],#cds-app input[type=email],#cds-app input[type=number],#cds-app select,#cds-app textarea{font:inherit;padding:8px 10px;border:1px solid #b9c1c9;border-radius:6px;background:#fff;color:var(--ink);width:100%}
+#cds-app table{width:100%;border-collapse:collapse}
+#cds-app th,#cds-app td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+#cds-app th{font-size:.85rem;color:var(--mute);font-weight:600}
+#cds-app td.n,#cds-app th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+#cds-app td.c{color:var(--mute);font-size:.9rem;white-space:nowrap}
+#cds-app .cds-hd{display:grid;grid-template-columns:2.6fr .9fr .9fr .7fr 1fr 32px;gap:8px;padding:6px 0;font-size:.85rem;font-weight:600;color:var(--mute);border-bottom:2px solid var(--line)}
+#cds-app .cds-row{display:grid;grid-template-columns:2.6fr .9fr .9fr .7fr 1fr 32px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+#cds-app .cds-row .n{text-align:right;font-variant-numeric:tabular-nums}
+#cds-app .cds-code{color:var(--mute);font-size:.9rem}
+#cds-app .cds-x{border:0;background:none;font-size:1.3rem;line-height:1;color:var(--mute);cursor:pointer}
+#cds-app .cds-btn{font:inherit;font-weight:600;border-radius:6px;padding:10px 16px;cursor:pointer;border:1px solid var(--acc);background:var(--acc);color:#fff}
+#cds-app .cds-btn:hover{background:var(--accd)}
+#cds-app .cds-btn.alt{background:#fff;color:var(--acc)}
+#cds-app .cds-btn.alt:hover{background:var(--soft)}
+#cds-app .cds-add{border:0;background:none;color:var(--acc);font:inherit;font-weight:600;cursor:pointer;padding:8px 0}
+#cds-app .cds-sum{margin-top:22px;background:var(--soft);border-radius:8px;padding:6px 16px}
+#cds-app .cds-sum div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}
+#cds-app .cds-sum div:last-child{border:0}
+#cds-app .cds-sum .tot{font-size:1.25rem;font-weight:700}
+#cds-app .cds-sum .neg{color:#9a3412}
+#cds-app .cds-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+#cds-app .cds-note{font-size:.88rem;color:var(--mute);margin-top:14px}
+#cds-app .cds-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+#cds-app label.cds-ck{display:flex;gap:8px;align-items:center;margin-top:12px;font-weight:600}
+#cds-app label.cds-ck input{width:auto}
+@media(max-width:640px){
+#cds-app .cds-hd{display:none}
+#cds-app .cds-row{grid-template-columns:1fr 1fr 32px;padding:10px 0}
+#cds-app .cds-row select{grid-column:1/-1}
+#cds-app .cds-row .cds-code{display:none}
+#cds-app .cds-grid{grid-template-columns:1fr}
+}
+</style>
+
+<h2>Photography price list &amp; quote builder</h2>
+<div class="cds-warn" role="alert"><strong>Pricing is subject to change.</strong> Please contact us for updated prices before booking: <a class="cds-mail" href="#"></a></div>
+
+<div class="cds-tabs" role="tablist">
+  <button class="cds-tab" role="tab" aria-selected="true" data-tab="pl">Price list</button>
+  <button class="cds-tab" role="tab" aria-selected="false" data-tab="qb">Quote builder</button>
+</div>
+
+<section id="cds-pl">
+  <input type="search" id="cds-q" placeholder="Search by item or code" aria-label="Search the price list">
+  <div id="cds-pl-body"></div>
+</section>
+
+<section id="cds-qb" hidden>
+  <div class="cds-hd"><span>Item</span><span>Code</span><span class="n">Cost</span><span>Qty</span><span class="n">Price</span><span></span></div>
+  <div id="cds-secs"></div>
+
+  <h3>Service type</h3>
+  <select id="cds-svc" aria-label="Service type"></select>
+  <label class="cds-ck" id="cds-dwrap"><input type="checkbox" id="cds-disc"> <span id="cds-dlabel"></span></label>
+
+  <div class="cds-sum" id="cds-sum" aria-live="polite"></div>
+
+  <h3>Your details (optional)</h3>
+  <div class="cds-grid">
+    <input type="text" id="cds-name" placeholder="Your name" aria-label="Your name">
+    <input type="email" id="cds-email" placeholder="Your email" aria-label="Your email">
+  </div>
+  <div class="cds-acts">
+    <button class="cds-btn" id="cds-send">Email this quote</button>
+    <button class="cds-btn alt" id="cds-print">Print / save as PDF</button>
+    <button class="cds-btn alt" id="cds-reset">Start over</button>
+  </div>
+  <p class="cds-note"><strong>Note:</strong> Prices may change if booked well in advance. The service cost will be honoured, but print prices from the print lab can change. If that happens, we usually reduce the number of prints so the cost of the product stays the same, and you will be told before the shoot day. Print costs are set by the lab and are out of our control.</p>
+  <p class="cds-note">If your budget is tight, please email <a class="cds-mail" href="#"></a> and we can talk about your needs.</p>
+</section>
+
+<script>
+(function(){
+var CFG={email:"cristallo.digitalstudio@gmail.com",cur:"$",discountRate:0.10,allowDiscount:true};
+var DATA={"prints":[["L3X5","Lustre 3.5\" x 5\"",1.1],["L4x6","Lustre 4\" x 6\"",1.32],["L5X7","Lustre 5\" x 7\"",1.87],["L12X16","Lustre 12\" x 16\"",16.8],["L16X20","Lustre 16\" x 20\"",28.59],["LA3","Lustre A3",21.99],["W2UP","x2 wallet print Lustre",1.1],["L8x10","Lustre 8\" x 10\"",6.0],["G3X5","Gloss 3.5\" x 5\"",1.1],["GX4W","x2 wallet print Gloss",1.1],["G8X10","Gloss 8\" x 10\"",6.0],["ME3x5","Metallic 3.5\" x 5\"",1.65],["MEX4W","x2 Metallic Wallet Prints",1.65],["ME8x10","Metallic 8\" x 10",8.99],["Pact","Pack T Pic A Pac",8.81]],"frames":[["C11X14","Canvas 11\"x14\" wrapped",98.23],["C16X20","Canvas 16\"x20\" wrapped",133.14],["C20X24","Canvas 20\"x24\" wrapped",173.78],["C20X30","Canvas 20\"x30\" wrapped",200.07],["C24x36","Canvas 24\"x36\" wrapped",356.1],["F20x30","Photo 20\"x30\" Framed Paper",314.48],["F16x16","Photo 16\"x16\" Framed Paper",200.18],["F-A3","A3 Framed Photo",173.56]],"books":[["PHOB","Photobook 20 PAGE 14x10",96.0]],"services":[["WEFD","Wedding Full Day",4000.0,750.0,640.0],["WEHD","Wedding Half Day",2000.0,1000.0,0.0],["BGSS","Bridal / Groom",500.0,250.0,0.0],["FAHD","Family Photos",380.0,250.0,0.0],["PEHD","Pet Photos",152.0,50.0,0.0],["MEFD","Event Photos",1600.0,750.0,640.0],["VIDS","Video Service",600.0,0.0,0.0]]};
+var root=document.getElementById("cds-app");
+function $(s){return root.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(root.querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function money(n){var a=Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,",");return(n<0?"-":"")+CFG.cur+a}
+function r2(n){return Math.round(n*100)/100}
+var SECS=[{k:"prints",t:"Photo prints"},{k:"frames",t:"Canvas & framed prints"},{k:"books",t:"Photobook"}];
+var state={lines:{prints:[{i:-1,q:1}],frames:[{i:-1,q:1}],books:[{i:-1,q:1}]},svc:-1,disc:false};
+
+$$(".cds-mail").forEach(function(a){a.href="mailto:"+CFG.email;a.textContent=CFG.email});
+$("#cds-dlabel").textContent="Apply "+Math.round(CFG.discountRate*100)+"% discount";
+if(!CFG.allowDiscount)$("#cds-dwrap").hidden=true;
+
+/* ---------- Price list ---------- */
+function renderPL(){
+  var q=$("#cds-q").value.toLowerCase().trim(),html="";
+  function grp(title,items){
+    var rows=items.filter(function(x){return !q||(x[0]+" "+x[1]).toLowerCase().indexOf(q)>-1});
+    if(!rows.length)return;
+    html+="<h3>"+esc(title)+"</h3><table><thead><tr><th>Item</th><th>Code</th><th class='n'>Price</th></tr></thead><tbody>"+
+      rows.map(function(x){return "<tr><td>"+esc(x[1])+"</td><td class='c'>"+esc(x[0])+"</td><td class='n'>"+money(x[2])+"</td></tr>"}).join("")+"</tbody></table>";
+  }
+  grp("Photo prints",DATA.prints);grp("Canvas & framed prints",DATA.frames);grp("Photobook",DATA.books);grp("Photography services",DATA.services);
+  $("#cds-pl-body").innerHTML=html||"<p class='cds-note'>No items match your search.</p>";
+}
+$("#cds-q").addEventListener("input",renderPL);
+
+/* ---------- Quote builder ---------- */
+function opts(items,sel){return "<option value=''>Select an item...</option>"+items.map(function(x,i){return "<option value='"+i+"'"+(i===sel?" selected":"")+">"+esc(x[1])+"</option>"}).join("")}
+function renderSecs(){
+  $("#cds-secs").innerHTML=SECS.map(function(s){
+    return "<h3>"+s.t+"</h3>"+state.lines[s.k].map(function(l,n){
+      return "<div class='cds-row' data-k='"+s.k+"' data-n='"+n+"'><select class='cds-sel' aria-label='"+s.t+" item'>"+opts(DATA[s.k],l.i)+"</select><span class='cds-code'></span><span class='n cds-unit'></span><input class='cds-qty' type='number' min='1' max='999' value='"+l.q+"' aria-label='Quantity'><span class='n cds-line'></span><button class='cds-x' aria-label='Remove this line'>&times;</button></div>";
+    }).join("")+"<button class='cds-add' data-k='"+s.k+"'>+ Add another item</button>";
+  }).join("");
+  update();
+}
+function compute(){
+  var m={rows:[],items:0};
+  SECS.forEach(function(s){state.lines[s.k].forEach(function(l,n){
+    var it=l.i>=0?DATA[s.k][l.i]:null,q=Math.max(1,parseInt(l.q,10)||1),tot=it?r2(it[2]*q):0;
+    m.rows.push({k:s.k,n:n,it:it,q:q,tot:tot});if(it)m.items+=tot;
+  })});
+  var sv=state.svc>=0?DATA.services[state.svc]:null;
+  m.sv=sv;m.svc=sv?sv[2]:0;
+  m.disc=(CFG.allowDiscount&&state.disc&&sv)?-r2(sv[2]*CFG.discountRate):0;
+  m.ret=sv?-sv[3]:0;m.hand=sv?sv[4]:0;
+  m.total=r2(m.items+m.svc+m.hand+m.disc);
+  m.bal=r2(m.total+m.ret);
+  return m;
+}
+function update(){
+  var m=compute();
+  m.rows.forEach(function(r){
+    var el=root.querySelector(".cds-row[data-k='"+r.k+"'][data-n='"+r.n+"']");if(!el)return;
+    el.querySelector(".cds-code").textContent=r.it?r.it[0]:"";
+    el.querySelector(".cds-unit").textContent=r.it?money(r.it[2]):"";
+    el.querySelector(".cds-line").textContent=r.it?money(r.tot):"";
+  });
+  var h="";
+  if(m.items)h+="<div><span>Prints, canvas &amp; photobook</span><span>"+money(m.items)+"</span></div>";
+  if(m.sv)h+="<div><span>"+esc(m.sv[1])+"</span><span>"+money(m.svc)+"</span></div>";
+  if(m.disc)h+="<div><span>Discount</span><span class='neg'>"+money(m.disc)+"</span></div>";
+  if(m.hand)h+="<div><span>Photography hand</span><span>"+money(m.hand)+"</span></div>";
+  if(m.ret)h+="<div><span>Retainer fee</span><span class='neg'>"+money(m.ret)+"</span></div>";
+  h+="<div class='tot'><span>Total cost</span><span>"+money(m.total)+"</span></div>";
+  if(m.ret)h+="<div><span>Balance after retainer</span><span>"+money(m.bal)+"</span></div>";
+  $("#cds-sum").innerHTML=h;
+}
+function quoteText(){
+  var m=compute(),L=["Quote request","",$("#cds-name").value?"Name: "+$("#cds-name").value:"",$("#cds-email").value?"Email: "+$("#cds-email").value:"","",""];
+  m.rows.forEach(function(r){if(r.it)L.push(r.it[0]+" - "+r.it[1]+": "+r.q+" x "+money(r.it[2])+" = "+money(r.tot))});
+  if(m.sv)L.push("Service: "+m.sv[1]+" = "+money(m.svc));
+  if(m.disc)L.push("Discount: "+money(m.disc));
+  if(m.hand)L.push("Photography hand: "+money(m.hand));
+  if(m.ret)L.push("Retainer fee: "+money(m.ret));
+  L.push("","Total cost: "+money(m.total));
+  if(m.ret)L.push("Balance after retainer: "+money(m.bal));
+  L.push("","Prices are subject to change. Final prices will be confirmed by email.");
+  return L.filter(function(x,i,a){return !(x===""&&a[i-1]==="")}).join("\n");
+}
+
+root.addEventListener("change",function(e){
+  var t=e.target,row=t.closest&&t.closest(".cds-row");
+  if(row&&t.classList.contains("cds-sel")){state.lines[row.dataset.k][+row.dataset.n].i=t.value===""?-1:+t.value;update()}
+  if(t.id==="cds-svc"){state.svc=t.value===""?-1:+t.value;update()}
+  if(t.id==="cds-disc"){state.disc=t.checked;update()}
+});
+root.addEventListener("input",function(e){
+  var t=e.target,row=t.closest&&t.closest(".cds-row");
+  if(row&&t.classList.contains("cds-qty")){state.lines[row.dataset.k][+row.dataset.n].q=t.value;update()}
+});
+root.addEventListener("click",function(e){
+  var t=e.target,row=t.closest(".cds-row");
+  if(t.dataset.tab){$$(".cds-tab").forEach(function(b){b.setAttribute("aria-selected",b===t)});$("#cds-pl").hidden=t.dataset.tab!=="pl";$("#cds-qb").hidden=t.dataset.tab!=="qb"}
+  if(t.classList.contains("cds-add")){state.lines[t.dataset.k].push({i:-1,q:1});renderSecs()}
+  if(t.classList.contains("cds-x")&&row){var a=state.lines[row.dataset.k];a.splice(+row.dataset.n,1);if(!a.length)a.push({i:-1,q:1});renderSecs()}
+});
+$("#cds-send").addEventListener("click",function(){
+  location.href="mailto:"+CFG.email+"?subject="+encodeURIComponent("Quote request")+"&body="+encodeURIComponent(quoteText());
+});
+$("#cds-reset").addEventListener("click",function(){
+  state={lines:{prints:[{i:-1,q:1}],frames:[{i:-1,q:1}],books:[{i:-1,q:1}]},svc:-1,disc:false};
+  $("#cds-svc").value="";$("#cds-disc").checked=false;renderSecs();
+});
+$("#cds-print").addEventListener("click",function(){
+  var w=window.open("","_blank");if(!w){alert("Please allow pop-ups to print your quote.");return}
+  w.document.write("<!doctype html><title>Quote</title><body style='font:15px/1.5 system-ui,sans-serif;max-width:700px;margin:30px auto;padding:0 16px'><h2>Quote</h2><pre style='font:inherit;white-space:pre-wrap'>"+esc(quoteText())+"</pre><p style='border:1px solid #d9a400;background:#fff4d6;padding:10px'><strong>Pricing is subject to change.</strong> Please contact "+esc(CFG.email)+" for updated prices.</p></body>");
+  w.document.close();w.focus();w.print();
+});
+
+$("#cds-svc").innerHTML="<option value=''>Select a service...</option>"+DATA.services.map(function(x,i){return "<option value='"+i+"'>"+esc(x[1])+" ("+money(x[2])+")</option>"}).join("");
+renderPL();renderSecs();
+})();
+</script>
+</div>
