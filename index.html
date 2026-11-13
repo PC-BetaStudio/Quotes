@@ -70,16 +70,10 @@
 
   <div class="cds-sum" id="cds-sum" aria-live="polite"></div>
 
-  <h3>Your details (optional)</h3>
-  <div class="cds-grid">
-    <input type="text" id="cds-name" placeholder="Your name" aria-label="Your name">
-    <input type="email" id="cds-email" placeholder="Your email" aria-label="Your email">
+    <div class="cds-acts">
+    <button class="cds-btn" id="cds-pdf">Download PDF</button>
   </div>
-  <div class="cds-acts">
-    <button class="cds-btn" id="cds-send">Email this quote</button>
-    <button class="cds-btn alt" id="cds-print">Print / save as PDF</button>
-    <button class="cds-btn alt" id="cds-reset">Start over</button>
-  </div>
+  <p class="cds-note" style="font-size:1rem;color:var(--ink)">Download your quote as a PDF, then email it to <a class="cds-mail" href="#"></a></p>
   <p class="cds-note"><strong>Note:</strong> Prices may change if booked well in advance. The service cost will be honoured, but print prices from the print lab can change. If that happens, we usually reduce the number of prints so the cost of the product stays the same, and you will be told before the shoot day. Print costs are set by the lab and are out of our control.</p>
   <p class="cds-note">If your budget is tight, please email <a class="cds-mail" href="#"></a> and we can talk about your needs.</p>
 </section>
@@ -158,7 +152,7 @@ function update(){
   $("#cds-sum").innerHTML=h;
 }
 function quoteText(){
-  var m=compute(),L=["Quote request","",$("#cds-name").value?"Name: "+$("#cds-name").value:"",$("#cds-email").value?"Email: "+$("#cds-email").value:"","",""];
+  var m=compute(),L=["Quote",""];
   m.rows.forEach(function(r){if(r.it)L.push(r.it[0]+" - "+r.it[1]+": "+r.q+" x "+money(r.it[2])+" = "+money(r.tot))});
   if(m.sv)L.push("Service: "+m.sv[1]+" = "+money(m.svc));
   if(m.disc)L.push("Discount: "+money(m.disc));
@@ -186,17 +180,44 @@ root.addEventListener("click",function(e){
   if(t.classList.contains("cds-add")){state.lines[t.dataset.k].push({i:-1,q:1});renderSecs()}
   if(t.classList.contains("cds-x")&&row){var a=state.lines[row.dataset.k];a.splice(+row.dataset.n,1);if(!a.length)a.push({i:-1,q:1});renderSecs()}
 });
-$("#cds-send").addEventListener("click",function(){
-  location.href="mailto:"+CFG.email+"?subject="+encodeURIComponent("Quote request")+"&body="+encodeURIComponent(quoteText());
-});
-$("#cds-reset").addEventListener("click",function(){
-  state={lines:{prints:[{i:-1,q:1}],frames:[{i:-1,q:1}],books:[{i:-1,q:1}]},svc:-1,disc:false};
-  $("#cds-svc").value="";$("#cds-disc").checked=false;renderSecs();
-});
-$("#cds-print").addEventListener("click",function(){
+function printQuote(){
   var w=window.open("","_blank");if(!w){alert("Please allow pop-ups to print your quote.");return}
-  w.document.write("<!doctype html><title>Quote</title><body style='font:15px/1.5 system-ui,sans-serif;max-width:700px;margin:30px auto;padding:0 16px'><h2>Quote</h2><pre style='font:inherit;white-space:pre-wrap'>"+esc(quoteText())+"</pre><p style='border:1px solid #d9a400;background:#fff4d6;padding:10px'><strong>Pricing is subject to change.</strong> Please contact "+esc(CFG.email)+" for updated prices.</p></body>");
+  w.document.write("<!doctype html><title>Quote</title><body style='font:15px/1.5 system-ui,sans-serif;max-width:700px;margin:30px auto;padding:0 16px'><pre style='font:inherit;white-space:pre-wrap'>"+esc(quoteText())+"</pre><p style='border:1px solid #d9a400;background:#fff4d6;padding:10px'><strong>Pricing is subject to change.</strong> Please contact "+esc(CFG.email)+" for updated prices.</p></body>");
   w.document.close();w.focus();w.print();
+}
+function buildPDF(){
+  var m=compute(),d=new window.jspdf.jsPDF({unit:"mm",format:"a4"}),x=15,y=20;
+  function chk(h){if(y+h>280){d.addPage();y=20}}
+  d.setFont("helvetica","bold");d.setFontSize(18);d.text("Quote",x,y);y+=7;
+  d.setFont("helvetica","normal");d.setFontSize(10);d.setTextColor(90);d.text(new Date().toLocaleDateString("en-AU"),x,y);d.setTextColor(0);y+=10;
+  d.setFont("helvetica","bold");d.setFontSize(9);
+  d.text("Code",x,y);d.text("Item",40,y);d.text("Qty",142,y,{align:"right"});d.text("Cost",166,y,{align:"right"});d.text("Price",195,y,{align:"right"});
+  y+=2;d.line(x,y,195,y);y+=5;d.setFont("helvetica","normal");d.setFontSize(10);
+  m.rows.forEach(function(r){
+    if(!r.it)return;var t=d.splitTextToSize(r.it[1],90);chk(t.length*5+2);
+    d.text(r.it[0],x,y);d.text(t,40,y);d.text(String(r.q),142,y,{align:"right"});d.text(money(r.it[2]),166,y,{align:"right"});d.text(money(r.tot),195,y,{align:"right"});y+=t.length*5+1;
+  });
+  y+=3;
+  function sum(l,v,b){chk(8);d.setFont("helvetica",b?"bold":"normal");d.setFontSize(b?12:10);d.text(l,x,y);d.text(money(v),195,y,{align:"right"});y+=b?8:6}
+  if(m.sv)sum(m.sv[1],m.svc);
+  if(m.disc)sum("Discount",m.disc);
+  if(m.hand)sum("Photography hand",m.hand);
+  if(m.ret)sum("Retainer fee",m.ret);
+  d.line(x,y-3,195,y-3);y+=2;
+  sum("Total cost",m.total,true);
+  if(m.ret)sum("Balance after retainer",m.bal);
+  y+=4;chk(40);d.setFont("helvetica","bold");d.setFontSize(10);d.text("Pricing is subject to change.",x,y);y+=5;
+  d.setFont("helvetica","normal");d.setFontSize(9);
+  d.text(d.splitTextToSize("Please contact "+CFG.email+" for updated prices. Prices may change if booked well in advance. The service cost will be honoured, but print prices from the print lab can change. If that happens, we usually reduce the number of prints so the cost of the product stays the same, and you will be told before the shoot day.",180),x,y);
+  d.save("quote.pdf");
+}
+$("#cds-pdf").addEventListener("click",function(){
+  var m=compute();
+  if(!m.items&&!m.sv){alert("Add at least one item or a service before downloading your quote.");return}
+  function go(){try{buildPDF()}catch(e){printQuote()}}
+  if(window.jspdf)return go();
+  var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+  s.onload=go;s.onerror=printQuote;document.head.appendChild(s);
 });
 
 $("#cds-svc").innerHTML="<option value=''>Select a service...</option>"+DATA.services.map(function(x,i){return "<option value='"+i+"'>"+esc(x[1])+" ("+money(x[2])+")</option>"}).join("");
